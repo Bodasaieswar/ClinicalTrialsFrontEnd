@@ -102,10 +102,16 @@ const ClinicalTrialsPage = () => {
 					<Box>
 						<HStack>
 							<Icon as={BsFillPeopleFill} />
-							{FormateAgeSentence(
-								ClinicalTrial.MinimumAge,
-								ClinicalTrial.MaximumAge,
-							)}
+							<Text
+								fontSize={'xs'}
+								mb={'3px'}
+								backgroundColor={'whiteAlpha.300'}
+							>
+								{FormateAgeSentence(
+									ClinicalTrial.MinimumAge,
+									ClinicalTrial.MaximumAge,
+								)}
+							</Text>
 						</HStack>
 					</Box>
 					<Text fontSize="sm">
