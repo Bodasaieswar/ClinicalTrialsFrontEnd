@@ -9,7 +9,6 @@ const useClinicalTrials = () => {
 		queryKey: ['allclinicaltrials'],
 		queryFn: apiClient.getAll,
 		staleTime: ms('24h'),
-		// initialData: clinicalData,
 	});
 };
 

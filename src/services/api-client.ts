@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import ClinicalTrails from '../entities/ClinicalTrials';
+import ClinicalTrialDetails from '../entities/ClinicalTrailDetails';
 
 const axiosInstance = axios.create({
 	baseURL: 'https://bodasaieswar.info/api',
@@ -12,19 +13,20 @@ class APIClient {
 		this.endpoint = endpoint;
 	}
 
-	getAll = (config: AxiosRequestConfig) => {
-		return axiosInstance
-			.get<ClinicalTrails[]>(this.endpoint, config)
-			.then((res) => {
-				return res.data;
-			});
+	getAll = async (config: AxiosRequestConfig) => {
+		const res = await axiosInstance.get<ClinicalTrails[]>(
+			this.endpoint,
+			config,
+		);
+		return res.data;
 	};
 
-	// get = (id: number | string) => {
-	// 	return axiosInstance
-	// 		.get<T>(this.endpoint + '/' + id)
-	// 		.then((res) => res.data);
-	// };
+	get = async (NCTId: undefined | string) => {
+		const res = await axiosInstance.get<ClinicalTrialDetails>(
+			this.endpoint + '/' + NCTId,
+		);
+		return res.data;
+	};
 }
 
 export default APIClient;

@@ -3,26 +3,41 @@ import {
 	InputGroup,
 	InputLeftAddon,
 	Text,
-	List,
-	ListItem,
-	Spinner,
 	Stack,
 	Button,
+	Box,
+	Icon,
+	HStack,
 } from '@chakra-ui/react';
+import { BsFillPeopleFill } from 'react-icons/bs';
 import useClinicalTrials from '../hooks/useClinicalTrials';
+import FormateAgeSentence from './FormateAgeSentence';
 import { useState } from 'react';
+import ClinicalTrialsPageSkeleton from './ClinicalTrialsPageSkeleton';
+import { Link } from 'react-router-dom';
+
+interface ShowMoreState {
+	[key: string]: boolean;
+}
 
 const ClinicalTrialsPage = () => {
 	const { data, isLoading, error } = useClinicalTrials();
-	const [showMore, setShowMore] = useState(false);
+	const [showMore, setShowMore] = useState<ShowMoreState>({});
 	const [searchTerm, setSearchTerm] = useState('');
 
 	if (error) return <p>Error: {error.message}</p>;
-	if (isLoading) return <Spinner />;
+	if (isLoading) return <ClinicalTrialsPageSkeleton />;
 
 	const filteredTrials = data?.filter((trial) =>
 		trial.OfficialTitle?.toLowerCase().includes(searchTerm.toLowerCase()),
 	);
+
+	const toggleShowMore = (NCTId: string) => {
+		setShowMore((prevState) => ({
+			...prevState,
+			[NCTId]: !prevState[NCTId],
+		}));
+	};
 
 	const highlightSearchTerm = (text: String) => {
 		const parts = text.split(new RegExp(`(${searchTerm})`, 'gi'));
@@ -48,19 +63,6 @@ const ClinicalTrialsPage = () => {
 
 	return (
 		<>
-			<Text fontSize="3xl">What is a Clinical Trial?</Text>
-			<Text fontSize="xl">
-				The US Department of Health and Human Services defines a
-				clinical trial as a research study conducted to evaluate a
-				medical procedure or medical product, such as a drug. Not all
-				studies at the University of Arizona involve drugs or
-				interventions; some studies use surveys or evaluate medical
-				records to find new and better ways to help people. Other
-				studies recruit healthy subjects, or controls, to better
-				evaluate and compare their results with those of non-healthy
-				subjects.
-			</Text>
-			<hr />
 			<Stack spacing={4}>
 				<InputGroup size="lg">
 					<InputLeftAddon children="Search Trials" />
@@ -80,34 +82,51 @@ const ClinicalTrialsPage = () => {
 					explore {data?.length || 0} studies
 				</Text>
 			</Stack>
-			<List>
-				{filteredTrials?.map((ClinicalTrial) => (
-					<ListItem key={ClinicalTrial.NCTId}>
-						<Text fontSize="2xl">
+			{filteredTrials?.map((ClinicalTrial) => (
+				<Box
+					p={4}
+					borderWidth="1px"
+					key={ClinicalTrial.NCTId}
+				>
+					<Link to={`/trial/${ClinicalTrial.NCTId}`}>
+						<Text
+							fontSize="lg"
+							mb={'2px'}
+						>
 							{ClinicalTrial.OfficialTitle &&
 								highlightSearchTerm(
 									ClinicalTrial.OfficialTitle,
 								)}
 						</Text>
-						<Text fontSize="lg">
-							{showMore
-								? ClinicalTrial.BriefSummary
-								: `${ClinicalTrial.BriefSummary?.substring(
-										0,
-										250,
-								  )}`}
-							<Button
-								colorScheme="red"
-								variant="link"
-								onClick={() => setShowMore(!showMore)}
-							>
-								{showMore ? '..show less' : '...show more'}
-							</Button>
-						</Text>
-						<hr />
-					</ListItem>
-				))}
-			</List>
+					</Link>
+					<Box>
+						<HStack>
+							<Icon as={BsFillPeopleFill} />
+							{FormateAgeSentence(
+								ClinicalTrial.MinimumAge,
+								ClinicalTrial.MaximumAge,
+							)}
+						</HStack>
+					</Box>
+					<Text fontSize="sm">
+						{showMore[ClinicalTrial.NCTId]
+							? ClinicalTrial.BriefSummary
+							: `${ClinicalTrial.BriefSummary?.substring(
+									0,
+									250,
+							  )}`}
+						<Button
+							colorScheme="red"
+							variant="link"
+							onClick={() => toggleShowMore(ClinicalTrial.NCTId)}
+						>
+							{showMore[ClinicalTrial.NCTId]
+								? '..show less'
+								: '..show more'}
+						</Button>
+					</Text>
+				</Box>
+			))}
 		</>
 	);
 };
