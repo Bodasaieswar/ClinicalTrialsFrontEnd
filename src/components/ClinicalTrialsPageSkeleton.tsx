@@ -1,4 +1,4 @@
-import { Stack, Skeleton, ListItem, List } from '@chakra-ui/react';
+import { Skeleton, ListItem, List, Divider } from '@chakra-ui/react';
 import React from 'react';
 
 const ClinicalTrialsPageSkeleton = () => {
@@ -8,7 +8,8 @@ const ClinicalTrialsPageSkeleton = () => {
 				{Array.from({ length: 10 }).map((_, index) => (
 					<React.Fragment key={index}>
 						<ListItem key={index}>
-							<Skeleton height="20px"></Skeleton>
+							<Skeleton height="40px"></Skeleton>
+							<Divider m={0} />
 
 							<Skeleton height="100px"></Skeleton>
 							<hr />

@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import useClinicalTrialDetails from '../hooks/useClinicalTrialDetails';
-import ClinicalTrialsPageSkeleton from './ClinicalTrialsPageSkeleton';
 import {
 	VStack,
 	Text,
@@ -19,6 +18,8 @@ import FormateAgeSentence from './FormateAgeSentence';
 import { BsFillPeopleFill, BsCalendar2CheckFill } from 'react-icons/bs';
 import { FaLocationDot, FaUserDoctor } from 'react-icons/fa6';
 import { GrStatusGood } from 'react-icons/gr';
+import { AiOutlineLink } from 'react-icons/ai';
+import ClinicalTrialsDetailsSkeleton from './ClinicalTrialsDetailsSkeleton';
 
 const ClinicalTrialDetails = () => {
 	const navigate = useNavigate();
@@ -26,7 +27,7 @@ const ClinicalTrialDetails = () => {
 	const { data, isLoading, error } = useClinicalTrialDetails(NCTId);
 
 	if (error) return <p>Error: {error.message}</p>;
-	if (isLoading) return <ClinicalTrialsPageSkeleton />;
+	if (isLoading) return <ClinicalTrialsDetailsSkeleton />;
 
 	const extractCriteria = (type: string) => {
 		// Check if data and EligibilityCriteria are defined
@@ -94,7 +95,10 @@ const ClinicalTrialDetails = () => {
 				<Divider />
 				<Box>
 					<HStack>
-						<Icon as={BsFillPeopleFill} />
+						<Icon
+							as={BsFillPeopleFill}
+							mr={4}
+						/>
 						<Text as="b">
 							{FormateAgeSentence(
 								data?.MinimumAge,
@@ -105,25 +109,36 @@ const ClinicalTrialDetails = () => {
 				</Box>
 				<Box>
 					<HStack>
-						<Icon as={FaLocationDot} />
-						<Text m={0}>at The Univeristy of Arizona</Text>
+						<Icon
+							as={FaLocationDot}
+							mr={4}
+						/>
+						<Text m={0}>at {data?.OfficialFacility}</Text>
 					</HStack>
 				</Box>
 				<Box>
 					<HStack>
-						<Icon as={BsCalendar2CheckFill} />
+						<Icon
+							as={BsCalendar2CheckFill}
+							mr={4}
+						/>
 						<Text m={0}>
-							study started {formatDate(data?.StartDate)}{' '}
+							study started{' '}
+							{data?.StartDate && formatDate(data?.StartDate)}{' '}
 							<span>
 								estimated completion{' '}
-								{formatDate(data?.CompletionDate)}
+								{data?.CompletionDate &&
+									formatDate(data?.CompletionDate)}
 							</span>
 						</Text>
 					</HStack>
 				</Box>
 				<Box>
 					<HStack>
-						<Icon as={FaUserDoctor} />
+						<Icon
+							as={FaUserDoctor}
+							mr={4}
+						/>
 						<Text m={0}>by {data?.OverallOfficialName}</Text>
 					</HStack>
 				</Box>
@@ -132,16 +147,18 @@ const ClinicalTrialDetails = () => {
 						<Icon
 							as={GrStatusGood}
 							color="green.100"
+							mr={4}
 						/>
 						<Badge colorScheme="green">
 							<Text m={0}>{data?.OfficialStatus}</Text>
 						</Badge>
 					</HStack>
 				</Box>
-				<Divider />
+				<Divider m={0} />
 				<Heading
 					as={'h5'}
 					mt={0}
+					mb={1}
 				>
 					Description
 				</Heading>
@@ -150,44 +167,81 @@ const ClinicalTrialDetails = () => {
 					<Text
 						pl={'30px'}
 						fontSize={'lg'}
+						as={'b'}
 					>
 						Summary
 					</Text>
-					<Text pl={'50px'}>{data?.BriefSummary}</Text>
+					<Text
+						pl={'50px'}
+						mb={1}
+					>
+						{data?.BriefSummary}
+					</Text>
 				</Box>
 				<Box>
 					<Text
 						pl={'30px'}
 						fontSize={'lg'}
+						as={'b'}
 					>
 						Official Title
 					</Text>
-					<Text pl={'50px'}>{data?.OfficialTitle}</Text>
+					<Text
+						pl={'50px'}
+						mb={1}
+					>
+						{data?.OfficialTitle}
+					</Text>
 				</Box>
 				<Box>
 					<Text
 						pl={'30px'}
 						fontSize={'lg'}
+						as={'b'}
 					>
 						Keywords
 					</Text>
-					<Text pl={'50px'}>{data?.Conditions}</Text>
+					<Text
+						pl={'50px'}
+						mb={1}
+					>
+						{data?.Conditions}
+					</Text>
 				</Box>
-				<Divider />
-				<Heading as={'h5'}>Eligibility</Heading>
+				<Divider m={0} />
+				<Heading
+					as={'h5'}
+					mt={0}
+					mb={1}
+				>
+					Eligibility
+				</Heading>
 				<Text pl={'30px'}>{data?.EligibilityCriteria}</Text>
-				<Text pl={'30px'}>{exclusionCriteria}</Text>
-				<Heading as={'h5'}>Locations</Heading>
-				<UnorderedList pl={'30px'}>
+				<Divider m={0} />
+				<Heading
+					as={'h5'}
+					mt={0}
+					mb={1}
+				>
+					Locations
+				</Heading>
+
+				<UnorderedList
+					pl={'30px'}
+					mb={0}
+				>
 					{facilities?.map((facility, index) => (
-						<ListItem key={facility}>
-							<Box>
-								<Text>
+						<ListItem
+							key={facility}
+							mb={0}
+						>
+							<Box m={0}>
+								<Text mb={0}>
 									{facility}{' '}
 									<Badge
-										colorScheme={
+										color={
 											statuses &&
-											statuses[index] === 'RECRUITING'
+											statuses[index] == 'Recruiting'
 												? 'green'
 												: 'default'
 										}
@@ -195,7 +249,7 @@ const ClinicalTrialDetails = () => {
 										{statuses && statuses[index]}
 									</Badge>
 								</Text>
-								<Text>
+								<Text mb={2}>
 									{cities && cities[index]},{' '}
 									{(states && states[index]) || 'N/A'},{' '}
 									{zip && zip[index]},{' '}
@@ -206,51 +260,192 @@ const ClinicalTrialDetails = () => {
 					))}
 				</UnorderedList>
 
-				<Divider />
-				<Heading as={'h5'}>
+				<Divider m={0} />
+				<Heading
+					as={'h5'}
+					mt={0}
+					mb={1}
+				>
 					Lead Scientist at {data?.OfficialFacility}
 				</Heading>
 				<Text>{data?.OfficialPI}</Text>
-				<Heading as={'h5'}>Details</Heading>
+				<Divider m={0} />
+				<Heading
+					as={'h6'}
+					mt={0}
+				>
+					Details
+				</Heading>
 				<Container ml={25}>
-					<dl className="row">
-						<dt className="col-sm-3 text-sm-right">Status</dt>
-						<dd className="col-sm-9"> accepting new patients</dd>
-
-						<dt className="col-sm-3 text-sm-right">Start Date</dt>
-						<dd className="col-sm-9">
-							{formatDate(data?.StartDate)}
-						</dd>
-						<dt className="col-sm-3 text-sm-right">
-							Completion Date
-						</dt>
-						<dd className="col-sm-9">
-							{formatDate(data?.CompletionDate)}
-						</dd>
-						<dt className="col-sm-3 text-sm-right">Sponsor</dt>
-						<dd className="col-sm-9">{data?.LeadSponsorName}</dd>
-						<dt className="col-sm-3 text-sm-right">ID</dt>
-						<dd className="col-sm-9">
-							<Link
-								href={`https://clinicaltrials.gov/study/${data?.NCTId}`}
-								isExternal
+					<Box
+						as="dl"
+						display="flex"
+						flexDirection="column"
+					>
+						<Box display="flex">
+							<Text
+								as="dt"
+								flex="3"
+								textAlign="right"
+								mr={4}
 							>
-								{data?.NCTId}
-							</Link>
-						</dd>
-						<dt className="col-sm-3 text-sm-right">Phase</dt>
-						<dd className="col-sm-9">{data?.Phase}</dd>
-						<dt className="col-sm-3 text-sm-right">Study Type</dt>
-						<dd className="col-sm-9">{data?.StudyType}</dd>
-						<dt className="col-sm-3 text-sm-right">Participants</dt>
-						<dd className="col-sm-9">
-							Expecting {data?.EnrollmentCount} study participants
-						</dd>
-						<dt className="col-sm-3 text-sm-right">Last Updated</dt>
-						<dd className="col-sm-9">
-							{formatDate(data?.LastUpdateSubmitDate)}
-						</dd>
-					</dl>
+								Status
+							</Text>
+							<Text
+								as="dd"
+								flex="9"
+							>
+								accepting new patients
+							</Text>
+						</Box>
+
+						<Box display="flex">
+							<Text
+								as="dt"
+								flex="3"
+								textAlign="right"
+								mr={4}
+							>
+								Start Date
+							</Text>
+							<Text
+								as="dd"
+								flex="9"
+							>
+								{data?.StartDate && formatDate(data?.StartDate)}
+							</Text>
+						</Box>
+
+						<Box display="flex">
+							<Text
+								as="dt"
+								flex="3"
+								textAlign="right"
+								mr={4}
+							>
+								Completion Date
+							</Text>
+							<Text
+								as="dd"
+								flex="9"
+							>
+								{data?.CompletionDate &&
+									formatDate(data?.CompletionDate)}
+							</Text>
+						</Box>
+
+						<Box display="flex">
+							<Text
+								as="dt"
+								flex="3"
+								textAlign="right"
+								mr={4}
+							>
+								Sponsor
+							</Text>
+							<Text
+								as="dd"
+								flex="9"
+							>
+								{data?.LeadSponsorName}
+							</Text>
+						</Box>
+
+						<Box display="flex">
+							<Text
+								as="dt"
+								flex="3"
+								textAlign="right"
+								mr={4}
+							>
+								ID
+							</Text>
+							<Text
+								as="dd"
+								flex="9"
+							>
+								<Icon as={AiOutlineLink} />
+								<Link
+									href={`https://clinicaltrials.gov/study/${data?.NCTId}`}
+									isExternal
+									color={'blue.500'}
+									pl={'2'}
+								>
+									{data?.NCTId}
+								</Link>
+							</Text>
+						</Box>
+
+						<Box display="flex">
+							<Text
+								as="dt"
+								flex="3"
+								textAlign="right"
+								mr={4}
+							>
+								Phase
+							</Text>
+							<Text
+								as="dd"
+								flex="9"
+							>
+								{data?.Phase}
+							</Text>
+						</Box>
+
+						<Box display="flex">
+							<Text
+								as="dt"
+								flex="3"
+								textAlign="right"
+								mr={4}
+							>
+								Study Type
+							</Text>
+							<Text
+								as="dd"
+								flex="9"
+							>
+								{data?.StudyType}
+							</Text>
+						</Box>
+
+						<Box display="flex">
+							<Text
+								as="dt"
+								flex="3"
+								textAlign="right"
+								mr={4}
+							>
+								Participants
+							</Text>
+							<Text
+								as="dd"
+								flex="9"
+							>
+								Expecting {data?.EnrollmentCount} study
+								participants
+							</Text>
+						</Box>
+
+						<Box display="flex">
+							<Text
+								as="dt"
+								flex="3"
+								textAlign="right"
+								mr={4}
+							>
+								Last Updated
+							</Text>
+							<Text
+								as="dd"
+								flex="9"
+							>
+								{data?.LastUpdateSubmitDate &&
+									formatDate(data?.LastUpdateSubmitDate)}
+							</Text>
+						</Box>
+					</Box>
 				</Container>
 			</VStack>
 		</>
