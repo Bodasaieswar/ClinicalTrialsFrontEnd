@@ -10,18 +10,6 @@ import {
 	HStack,
 	Icon,
 	Badge,
-	Table,
-	TableCaption,
-	TableContainer,
-	Tbody,
-	Td,
-	Tfoot,
-	Th,
-	Thead,
-	Tr,
-	Flex,
-	Center,
-	Spacer,
 	Container,
 	Link,
 	ListItem,
@@ -40,22 +28,43 @@ const ClinicalTrialDetails = () => {
 	if (error) return <p>Error: {error.message}</p>;
 	if (isLoading) return <ClinicalTrialsPageSkeleton />;
 
-	// const extractCriteria = (type) => {
-	// 	const splitData = data.EligibilityCriteria.split('Exclusion Criteria:');
-	// 	const criteria = type === 'Inclusion' ? splitData[0] : splitData[1];
-	// 	const criteriaList = criteria
-	// 		.split('\n\n')
-	// 		.filter((item) => item.trim() !== '');
+	const extractCriteria = (type: string) => {
+		// Check if data and EligibilityCriteria are defined
+		if (!data || !data.EligibilityCriteria) {
+			return [];
+		}
 
-	// 	if (type === 'Inclusion') {
-	// 		criteriaList.shift(); // Removing the "Inclusion Criteria:" header
-	// 	}
+		const splitData = data.EligibilityCriteria.split('Exclusion');
 
-	// 	return criteriaList;
-	// };
+		// Check if we successfully split the data into at least two parts
+		if (splitData.length < 2) {
+			return [];
+		}
 
-	// const inclusionCriteria = extractCriteria('Inclusion');
-	// const exclusionCriteria = extractCriteria('Exclusion');
+		let criteria;
+
+		if (type === 'Inclusion') {
+			criteria = splitData[0];
+		} else if (type === 'Exclusion') {
+			criteria = splitData[1];
+		} else {
+			// Invalid type
+			return [];
+		}
+
+		const criteriaList = criteria
+			.split('\n\n')
+			.filter((item) => item.trim() !== '');
+
+		if (type === 'Inclusion') {
+			criteriaList.shift(); // Removing the "Inclusion Criteria:" header
+		}
+
+		return criteriaList;
+	};
+
+	const inclusionCriteria = extractCriteria('Inclusion');
+	const exclusionCriteria = extractCriteria('Exclusion');
 
 	const formatDate = (dateString: string) => {
 		const options = { month: 'long', year: 'numeric' };
@@ -155,6 +164,8 @@ const ClinicalTrialDetails = () => {
 				</Box>
 				<Divider />
 				<Heading as={'h5'}>Eligibility</Heading>
+				<Text pl={'30px'}>{data?.EligibilityCriteria}</Text>
+				<Text pl={'30px'}>{exclusionCriteria}</Text>
 				<Heading as={'h5'}>Locations</Heading>
 				<UnorderedList pl={'30px'}>
 					{facilities?.map((facility, index) => (
@@ -175,8 +186,9 @@ const ClinicalTrialDetails = () => {
 
 				<Divider />
 				<Heading as={'h5'}>
-					Lead Scientist at University of Arizona Health Sciences
+					Lead Scientist at {data?.OfficialFacility}
 				</Heading>
+				<Text>{data?.OfficialPI}</Text>
 				<Heading as={'h5'}>Details</Heading>
 				<Container ml={25}>
 					<dl className="row">

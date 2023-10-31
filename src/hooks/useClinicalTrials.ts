@@ -8,7 +8,10 @@ const useClinicalTrials = () => {
 	return useQuery({
 		queryKey: ['allclinicaltrials'],
 		queryFn: apiClient.getAll,
-		staleTime: ms('24h'),
+		staleTime: ms('24h'), // Data will become stale after 24 hours
+		// initialData: () => {
+		// 	return queryClient.getQueryData(['allclinicaltrails']);
+		// },
 	});
 };
 

@@ -12,7 +12,7 @@ import {
 import { BsFillPeopleFill } from 'react-icons/bs';
 import useClinicalTrials from '../hooks/useClinicalTrials';
 import FormateAgeSentence from './FormateAgeSentence';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ClinicalTrialsPageSkeleton from './ClinicalTrialsPageSkeleton';
 import { Link } from 'react-router-dom';
 
@@ -20,17 +20,24 @@ interface ShowMoreState {
 	[key: string]: boolean;
 }
 
+const ITEMS_PER_PAGE = 20;
+
 const ClinicalTrialsPage = () => {
 	const { data, isLoading, error } = useClinicalTrials();
+	const [currentPage, setCurrentPage] = useState(1);
 	const [showMore, setShowMore] = useState<ShowMoreState>({});
 	const [searchTerm, setSearchTerm] = useState('');
 
-	if (error) return <p>Error: {error.message}</p>;
-	if (isLoading) return <ClinicalTrialsPageSkeleton />;
+	const filteredTrials =
+		data?.filter((trial) =>
+			trial.OfficialTitle?.toLowerCase().includes(
+				searchTerm.toLowerCase(),
+			),
+		) || [];
 
-	const filteredTrials = data?.filter((trial) =>
-		trial.OfficialTitle?.toLowerCase().includes(searchTerm.toLowerCase()),
-	);
+	useEffect(() => {
+		setCurrentPage(1); // Reset to the first page whenever searchTerm changes
+	}, [searchTerm]);
 
 	const toggleShowMore = (NCTId: string) => {
 		setShowMore((prevState) => ({
@@ -39,27 +46,28 @@ const ClinicalTrialsPage = () => {
 		}));
 	};
 
-	const highlightSearchTerm = (text: String) => {
+	const highlightSearchTerm = (text: string) => {
 		const parts = text.split(new RegExp(`(${searchTerm})`, 'gi'));
-		return (
-			<>
-				{parts.map((part, index) =>
-					part.toLowerCase() === searchTerm.toLowerCase() ? (
-						<span
-							key={index}
-							style={{
-								backgroundColor: '#fbdde0',
-							}}
-						>
-							{part}
-						</span>
-					) : (
-						part
-					),
-				)}
-			</>
+		return parts.map((part, index) =>
+			part.toLowerCase() === searchTerm.toLowerCase() ? (
+				<span
+					key={index}
+					style={{ backgroundColor: '#fbdde0' }}
+				>
+					{part}
+				</span>
+			) : (
+				part
+			),
 		);
 	};
+
+	if (error) return <p>Error: {error.message}</p>;
+	if (isLoading) return <ClinicalTrialsPageSkeleton />;
+
+	const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+	const endIndex = startIndex + ITEMS_PER_PAGE;
+	const displayedTrials = filteredTrials.slice(startIndex, endIndex);
 
 	return (
 		<>
@@ -79,60 +87,102 @@ const ClinicalTrialsPage = () => {
 					color="blue.800"
 					fontWeight="500"
 				>
-					explore {data?.length || 0} studies
+					explore {filteredTrials.length} studies
 				</Text>
 			</Stack>
-			{filteredTrials?.map((ClinicalTrial) => (
-				<Box
-					p={4}
-					borderWidth="1px"
-					key={ClinicalTrial.NCTId}
-				>
-					<Link to={`/trial/${ClinicalTrial.NCTId}`}>
-						<Text
-							fontSize="lg"
-							mb={'2px'}
+			<Stack spacing={4}>
+				{displayedTrials.map((trial) => {
+					const {
+						NCTId,
+						OfficialTitle,
+						MinimumAge,
+						MaximumAge,
+						BriefSummary,
+					} = trial;
+					return (
+						<Box
+							key={NCTId}
+							p={4}
+							borderWidth="1px"
 						>
-							{ClinicalTrial.OfficialTitle &&
-								highlightSearchTerm(
-									ClinicalTrial.OfficialTitle,
-								)}
-						</Text>
-					</Link>
-					<Box>
-						<HStack>
-							<Icon as={BsFillPeopleFill} />
-							<Text
-								fontSize={'xs'}
-								mb={'3px'}
-								backgroundColor={'whiteAlpha.300'}
-							>
-								{FormateAgeSentence(
-									ClinicalTrial.MinimumAge,
-									ClinicalTrial.MaximumAge,
-								)}
+							<Link to={`/trial/${NCTId}`}>
+								<Text
+									fontSize="lg"
+									mb={'2px'}
+								>
+									{OfficialTitle &&
+										highlightSearchTerm(OfficialTitle)}
+								</Text>
+							</Link>
+							<Box>
+								<HStack>
+									<Icon as={BsFillPeopleFill} />
+									<Text
+										fontSize={'xs'}
+										mb={'3px'}
+										backgroundColor={'whiteAlpha.300'}
+									>
+										{FormateAgeSentence(
+											MinimumAge,
+											MaximumAge,
+										)}
+									</Text>
+								</HStack>
+							</Box>
+							<Text fontSize="sm">
+								{showMore[NCTId]
+									? BriefSummary
+									: `${BriefSummary?.substring(0, 250)}`}
+								<Button
+									colorScheme="red"
+									variant="link"
+									onClick={() => toggleShowMore(NCTId)}
+								>
+									{showMore[NCTId]
+										? '..show less'
+										: '..show more'}
+								</Button>
 							</Text>
-						</HStack>
-					</Box>
-					<Text fontSize="sm">
-						{showMore[ClinicalTrial.NCTId]
-							? ClinicalTrial.BriefSummary
-							: `${ClinicalTrial.BriefSummary?.substring(
-									0,
-									250,
-							  )}`}
-						<Button
-							colorScheme="red"
-							variant="link"
-							onClick={() => toggleShowMore(ClinicalTrial.NCTId)}
-						>
-							{showMore[ClinicalTrial.NCTId]
-								? '..show less'
-								: '..show more'}
-						</Button>
+						</Box>
+					);
+				})}
+				<Box
+					mt={4}
+					display="flex"
+					justifyContent="space-between"
+				>
+					<Button
+						disabled={currentPage === 1}
+						onClick={() =>
+							setCurrentPage((prev) => Math.max(prev - 1, 1))
+						}
+					>
+						Previous
+					</Button>
+					<Text>
+						Page {currentPage} of{' '}
+						{Math.ceil(filteredTrials.length / ITEMS_PER_PAGE)}
 					</Text>
+					<Button
+						disabled={
+							currentPage * ITEMS_PER_PAGE >=
+							filteredTrials.length
+						}
+						onClick={() =>
+							setCurrentPage((prev) =>
+								Math.min(
+									prev + 1,
+									Math.ceil(
+										filteredTrials.length / ITEMS_PER_PAGE,
+									),
+								),
+							)
+						}
+					>
+						Next
+					</Button>
 				</Box>
-			))}
+			</Stack>
 		</>
 	);
 };

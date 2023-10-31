@@ -19,7 +19,7 @@ const FormateAgeSentence = (
 		MaximumAge &&
 		MaximumAge.toLowerCase() === 'not available'
 	) {
-		return `Age information is not available`;
+		return `No age Limit`;
 	} else {
 		return `No age Limit`;
 	}
