@@ -1,5 +1,7 @@
-import { Outlet } from 'react-router-dom';
+import { Box, Divider, Flex, Icon, Link, Spacer, Text } from '@chakra-ui/react';
 
+import { Outlet } from 'react-router-dom';
+import { AiOutlineMail } from 'react-icons/ai';
 const Layout = () => {
 	return (
 		<>
@@ -38,59 +40,123 @@ const Layout = () => {
 				<div className="container py-4">
 					<div className="row">
 						<div className="col-12">
-							<small className="text-black text-left">
-								UAHS Research Administration
-							</small>
-							<br />
-							<small>
-								1670 E. Drachman Street, Tucson, AZ 85721
-							</small>
-							<br />
-							<a
-								href="mailto:VPHS-CRO@email.arizona.edu"
-								className="btn btn-link"
-							>
-								VPHS-CRO@email.arizona.edu
-							</a>
-							<br />
-							<br />
-							<small className="text-black">
-								College of Medicine - Tucson
-							</small>
-							<br />
-							<small>
-								1501 N. Campbell Ave., Tucson, AZ 85724
-							</small>
-							<br />
-							<br />
-							<small className="text-black">
-								College of Medicine - Phoenix
-							</small>
-							<br />
-							<small>
-								550 E. Van Buren Street, Phoenix, AZ 85004
-							</small>
-							<br />
-							<br />
-							<hr />
-							<br />
+							<Flex>
+								<Box
+									p="4"
+									textAlign="left"
+								>
+									<Link
+										href="https://research.uahs.arizona.edu/"
+										color="blue.700"
+										textDecoration={'underline'}
+										fontSize={'xs'}
+										isExternal
+									>
+										UAHS Research Administration
+									</Link>
+
+									<Text
+										fontSize="xs"
+										m={0}
+									>
+										1670 E. Drachman Street
+									</Text>
+									<Text
+										fontSize={'xs'}
+										m={0}
+									>
+										Tucson, AZ 85721
+									</Text>
+									<Link
+										href="mailto:VPHS-CRO@email.arizona.edu"
+										color="blue.600"
+										fontSize={'xs'}
+										isExternal
+										pr={'2px'}
+									>
+										VPHS-CRO@email.arizona.edu
+										<span>
+											<Icon as={AiOutlineMail} />
+										</span>
+									</Link>
+									<Spacer mb={'10px'} />
+									<Link
+										href="https://medicine.arizona.edu/"
+										fontSize="xs"
+										color="blue.700"
+										isExternal
+										textDecoration={'underline'}
+									>
+										College of Medicine - Tucson
+									</Link>
+
+									<Text
+										fontSize="xs"
+										m={0}
+									>
+										1501 N. Campbell Ave
+									</Text>
+									<Text
+										fontSize={'xs'}
+										m={0}
+									>
+										Tucson, AZ 85721
+									</Text>
+									<Spacer mb={'10px'} />
+									<Link
+										href="https://medicine.arizona.edu/"
+										fontSize="xs"
+										color="blue.700"
+										isExternal
+										textDecoration={'underline'}
+									>
+										College of Medicine - Phoenix
+									</Link>
+
+									<Text
+										fontSize="xs"
+										m={0}
+									>
+										550 E. van Buren Street
+									</Text>
+									<Text
+										fontSize={'xs'}
+										m={0}
+									>
+										Phoenix, AZ 85004
+									</Text>
+								</Box>
+								<Spacer />
+								<Box
+									p="4"
+									textAlign={'right'}
+								>
+									<Link
+										href="https://healthsciences.arizona.edu/"
+										fontSize="lg"
+										color="blue.700"
+										isExternal
+									>
+										The University of Arizona Health
+										Sciences
+									</Link>
+									<Text fontSize={'xs'}>
+										The University of Arizona is an EEO/AA -
+										M/W/D/V Employer.
+									</Text>
+								</Box>
+							</Flex>
 						</div>
-						<div className="col-12">
-							The University of Arizona is an EEO/AA - M/W/D/V
-							Employer.
-							<br />
-							<a
-								href="#"
-								className="btn btn-link"
-							>
-								Admin Login
-							</a>
-							<small>Web development by UAHS Biocom</small>
-						</div>
-						<small className="text-black text-center">
-							© 2021 The Arizona Board of Regents on behalf of The
-							University of Arizona.
-						</small>
+						<Divider />
+						<Box
+							w={'100%'}
+							textAlign={'center'}
+						>
+							<Text fontSize={'sm'}>
+								© 2021 The Arizona Board of Regents on behalf of
+								The University of Arizona.
+							</Text>
+						</Box>
 					</div>
 				</div>
 			</footer>
