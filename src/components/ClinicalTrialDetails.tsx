@@ -75,6 +75,8 @@ const ClinicalTrialDetails = () => {
 	const statuses = data?.LocationStatus.split(',');
 	const cities = data?.LocationCity.split(',');
 	const states = data?.LocationState.split(',');
+	const countries = data?.LocationCountry.split(',');
+	const zip = data?.LocationZip.split(',');
 
 	return (
 		<>
@@ -132,7 +134,7 @@ const ClinicalTrialDetails = () => {
 							color="green.100"
 						/>
 						<Badge colorScheme="green">
-							<Text m={0}>{data?.OverallStatus}</Text>
+							<Text m={0}>{data?.OfficialStatus}</Text>
 						</Badge>
 					</HStack>
 				</Box>
@@ -162,6 +164,15 @@ const ClinicalTrialDetails = () => {
 					</Text>
 					<Text pl={'50px'}>{data?.OfficialTitle}</Text>
 				</Box>
+				<Box>
+					<Text
+						pl={'30px'}
+						fontSize={'lg'}
+					>
+						Keywords
+					</Text>
+					<Text pl={'50px'}>{data?.Conditions}</Text>
+				</Box>
 				<Divider />
 				<Heading as={'h5'}>Eligibility</Heading>
 				<Text pl={'30px'}>{data?.EligibilityCriteria}</Text>
@@ -172,12 +183,23 @@ const ClinicalTrialDetails = () => {
 						<ListItem key={facility}>
 							<Box>
 								<Text>
-									{facility}
-									<Badge>{statuses[index]}</Badge>
+									{facility}{' '}
+									<Badge
+										colorScheme={
+											statuses &&
+											statuses[index] === 'RECRUITING'
+												? 'green'
+												: 'default'
+										}
+									>
+										{statuses && statuses[index]}
+									</Badge>
 								</Text>
 								<Text>
-									{cities[index]}, {states[index] || 'N/A'},{' '}
-									{data.LocationZip}, {data.LocationCountry}
+									{cities && cities[index]},{' '}
+									{(states && states[index]) || 'N/A'},{' '}
+									{zip && zip[index]},{' '}
+									{countries && countries[index]}
 								</Text>
 							</Box>
 						</ListItem>

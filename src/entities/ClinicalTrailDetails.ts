@@ -27,5 +27,6 @@ export default interface ClinicalTrialDetails {
 	OfficialContactRole: string;
 	OfficialContactPhone: string;
 	OfficialContactEmail: string;
+	OfficialStatus: string;
 	Conditions: string;
 }
