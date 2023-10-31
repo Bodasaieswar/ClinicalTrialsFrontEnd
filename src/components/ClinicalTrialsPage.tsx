@@ -8,6 +8,7 @@ import {
 	Box,
 	Icon,
 	HStack,
+	Spacer,
 } from '@chakra-ui/react';
 import { BsFillPeopleFill } from 'react-icons/bs';
 import useClinicalTrials from '../hooks/useClinicalTrials';
@@ -152,21 +153,29 @@ const ClinicalTrialsPage = () => {
 					justifyContent="space-between"
 				>
 					<Button
-						disabled={currentPage === 1}
+						isDisabled={currentPage === 1}
+						colorScheme={currentPage === 1 ? 'gray' : 'red'}
 						onClick={() =>
 							setCurrentPage((prev) => Math.max(prev - 1, 1))
 						}
+						as={'b'}
 					>
 						Previous
 					</Button>
-					<Text>
+					<Text as="b">
 						Page {currentPage} of{' '}
 						{Math.ceil(filteredTrials.length / ITEMS_PER_PAGE)}
 					</Text>
 					<Button
-						disabled={
+						isDisabled={
 							currentPage * ITEMS_PER_PAGE >=
 							filteredTrials.length
+						}
+						colorScheme={
+							currentPage * ITEMS_PER_PAGE >=
+							filteredTrials.length
+								? 'gray'
+								: 'red'
 						}
 						onClick={() =>
 							setCurrentPage((prev) =>
@@ -178,10 +187,12 @@ const ClinicalTrialsPage = () => {
 								),
 							)
 						}
+						as={'b'}
 					>
 						Next
 					</Button>
 				</Box>
+				<Spacer />
 			</Stack>
 		</>
 	);
