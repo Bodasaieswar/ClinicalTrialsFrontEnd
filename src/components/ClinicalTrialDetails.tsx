@@ -10,6 +10,22 @@ import {
 	HStack,
 	Icon,
 	Badge,
+	Table,
+	TableCaption,
+	TableContainer,
+	Tbody,
+	Td,
+	Tfoot,
+	Th,
+	Thead,
+	Tr,
+	Flex,
+	Center,
+	Spacer,
+	Container,
+	Link,
+	ListItem,
+	UnorderedList,
 } from '@chakra-ui/react';
 import FormateAgeSentence from './FormateAgeSentence';
 import { BsFillPeopleFill, BsCalendar2CheckFill } from 'react-icons/bs';
@@ -24,27 +40,32 @@ const ClinicalTrialDetails = () => {
 	if (error) return <p>Error: {error.message}</p>;
 	if (isLoading) return <ClinicalTrialsPageSkeleton />;
 
-	const extractCriteria = (type) => {
-		const splitData = data.EligibilityCriteria.split('Exclusion Criteria:');
-		const criteria = type === 'Inclusion' ? splitData[0] : splitData[1];
-		const criteriaList = criteria
-			.split('\n\n')
-			.filter((item) => item.trim() !== '');
+	// const extractCriteria = (type) => {
+	// 	const splitData = data.EligibilityCriteria.split('Exclusion Criteria:');
+	// 	const criteria = type === 'Inclusion' ? splitData[0] : splitData[1];
+	// 	const criteriaList = criteria
+	// 		.split('\n\n')
+	// 		.filter((item) => item.trim() !== '');
 
-		if (type === 'Inclusion') {
-			criteriaList.shift(); // Removing the "Inclusion Criteria:" header
-		}
+	// 	if (type === 'Inclusion') {
+	// 		criteriaList.shift(); // Removing the "Inclusion Criteria:" header
+	// 	}
 
-		return criteriaList;
-	};
+	// 	return criteriaList;
+	// };
 
-	const inclusionCriteria = extractCriteria('Inclusion');
-	const exclusionCriteria = extractCriteria('Exclusion');
+	// const inclusionCriteria = extractCriteria('Inclusion');
+	// const exclusionCriteria = extractCriteria('Exclusion');
 
 	const formatDate = (dateString: string) => {
 		const options = { month: 'long', year: 'numeric' };
 		return new Date(dateString).toLocaleDateString(undefined, options);
 	};
+
+	const facilities = data?.LocationFacility.split(',');
+	const statuses = data?.LocationStatus.split(',');
+	const cities = data?.LocationCity.split(',');
+	const states = data?.LocationState.split(',');
 
 	return (
 		<>
@@ -63,7 +84,12 @@ const ClinicalTrialDetails = () => {
 				<Box>
 					<HStack>
 						<Icon as={BsFillPeopleFill} />
-						{FormateAgeSentence(data?.MinimumAge, data?.MaximumAge)}
+						<Text as="b">
+							{FormateAgeSentence(
+								data?.MinimumAge,
+								data?.MaximumAge,
+							)}
+						</Text>
 					</HStack>
 				</Box>
 				<Box>
@@ -79,7 +105,7 @@ const ClinicalTrialDetails = () => {
 							study started {formatDate(data?.StartDate)}{' '}
 							<span>
 								estimated completion{' '}
-								{formatDate(data?.PrimaryCompletionDate)}
+								{formatDate(data?.CompletionDate)}
 							</span>
 						</Text>
 					</HStack>
@@ -87,9 +113,7 @@ const ClinicalTrialDetails = () => {
 				<Box>
 					<HStack>
 						<Icon as={FaUserDoctor} />
-						<Text m={0}>
-							study started {data?.OverallOfficialName}
-						</Text>
+						<Text m={0}>by {data?.OverallOfficialName}</Text>
 					</HStack>
 				</Box>
 				<Box>
@@ -104,7 +128,12 @@ const ClinicalTrialDetails = () => {
 					</HStack>
 				</Box>
 				<Divider />
-				<Heading as={'h5'}>Description</Heading>
+				<Heading
+					as={'h5'}
+					mt={0}
+				>
+					Description
+				</Heading>
 
 				<Box>
 					<Text
@@ -127,161 +156,68 @@ const ClinicalTrialDetails = () => {
 				<Divider />
 				<Heading as={'h5'}>Eligibility</Heading>
 				<Heading as={'h5'}>Locations</Heading>
+				<UnorderedList pl={'30px'}>
+					{facilities?.map((facility, index) => (
+						<ListItem key={facility}>
+							<Box>
+								<Text>
+									{facility}
+									<Badge>{statuses[index]}</Badge>
+								</Text>
+								<Text>
+									{cities[index]}, {states[index] || 'N/A'},{' '}
+									{data.LocationZip}, {data.LocationCountry}
+								</Text>
+							</Box>
+						</ListItem>
+					))}
+				</UnorderedList>
+
+				<Divider />
 				<Heading as={'h5'}>
 					Lead Scientist at University of Arizona Health Sciences
 				</Heading>
 				<Heading as={'h5'}>Details</Heading>
-				<HStack>
-					<Text
-						pl={'60px'}
-						fontWeight={600}
-						m={0}
-						align={'right'}
-					>
-						Status
-					</Text>
-					<Text
-						pl={'60px'}
-						m={0}
-					>
-						{data?.OverallStatus}
-					</Text>
-				</HStack>
-				<HStack>
-					<Text
-						pl={'60px'}
-						fontWeight={600}
-						m={0}
-					>
-						Start Date
-					</Text>
-					<Text
-						pl={'60px'}
-						m={0}
-					>
-						{data?.OverallStatus}
-					</Text>
-				</HStack>
-				<HStack>
-					<Text
-						pl={'60px'}
-						fontWeight={600}
-						m={0}
-					>
-						Completion Date
-					</Text>
-					<Text
-						pl={'60px'}
-						m={0}
-					>
-						{data?.OverallStatus}
-					</Text>
-				</HStack>
-				<HStack>
-					<Text
-						pl={'60px'}
-						fontWeight={600}
-						m={0}
-					>
-						Sponsor
-					</Text>
-					<Text
-						pl={'60px'}
-						m={0}
-					>
-						{data?.OverallStatus}
-					</Text>
-				</HStack>
-				<HStack>
-					<Text
-						pl={'60px'}
-						fontWeight={600}
-						m={0}
-					>
-						Link
-					</Text>
-					<Text
-						pl={'60px'}
-						m={0}
-					>
-						{data?.OverallStatus}
-					</Text>
-				</HStack>
-				<HStack>
-					<Text
-						pl={'60px'}
-						fontWeight={600}
-						m={0}
-					>
-						ID
-					</Text>
-					<Text
-						pl={'60px'}
-						m={0}
-					>
-						{data?.OverallStatus}
-					</Text>
-				</HStack>
-				<HStack>
-					<Text
-						pl={'60px'}
-						fontWeight={600}
-						m={0}
-					>
-						Phase
-					</Text>
-					<Text
-						pl={'60px'}
-						m={0}
-					>
-						{data?.OverallStatus}
-					</Text>
-				</HStack>
-				<HStack>
-					<Text
-						pl={'60px'}
-						fontWeight={600}
-						m={0}
-					>
-						Study Type
-					</Text>
-					<Text
-						pl={'60px'}
-						m={0}
-					>
-						{data?.OverallStatus}
-					</Text>
-				</HStack>
-				<HStack>
-					<Text
-						pl={'60px'}
-						fontWeight={600}
-						m={0}
-					>
-						Participants
-					</Text>
-					<Text
-						pl={'60px'}
-						m={0}
-					>
-						{data?.OverallStatus}
-					</Text>
-				</HStack>
-				<HStack>
-					<Text
-						pl={'60px'}
-						fontWeight={600}
-						m={0}
-					>
-						Last Updated
-					</Text>
-					<Text
-						pl={'60px'}
-						m={0}
-					>
-						{data?.OverallStatus}
-					</Text>
-				</HStack>
+				<Container ml={25}>
+					<dl className="row">
+						<dt className="col-sm-3 text-sm-right">Status</dt>
+						<dd className="col-sm-9"> accepting new patients</dd>
+
+						<dt className="col-sm-3 text-sm-right">Start Date</dt>
+						<dd className="col-sm-9">
+							{formatDate(data?.StartDate)}
+						</dd>
+						<dt className="col-sm-3 text-sm-right">
+							Completion Date
+						</dt>
+						<dd className="col-sm-9">
+							{formatDate(data?.CompletionDate)}
+						</dd>
+						<dt className="col-sm-3 text-sm-right">Sponsor</dt>
+						<dd className="col-sm-9">{data?.LeadSponsorName}</dd>
+						<dt className="col-sm-3 text-sm-right">ID</dt>
+						<dd className="col-sm-9">
+							<Link
+								href={`https://clinicaltrials.gov/study/${data?.NCTId}`}
+								isExternal
+							>
+								{data?.NCTId}
+							</Link>
+						</dd>
+						<dt className="col-sm-3 text-sm-right">Phase</dt>
+						<dd className="col-sm-9">{data?.Phase}</dd>
+						<dt className="col-sm-3 text-sm-right">Study Type</dt>
+						<dd className="col-sm-9">{data?.StudyType}</dd>
+						<dt className="col-sm-3 text-sm-right">Participants</dt>
+						<dd className="col-sm-9">
+							Expecting {data?.EnrollmentCount} study participants
+						</dd>
+						<dt className="col-sm-3 text-sm-right">Last Updated</dt>
+						<dd className="col-sm-9">
+							{formatDate(data?.LastUpdateSubmitDate)}
+						</dd>
+					</dl>
+				</Container>
 			</VStack>
 		</>
 	);

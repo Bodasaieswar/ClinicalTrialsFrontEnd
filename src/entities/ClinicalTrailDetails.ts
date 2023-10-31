@@ -1,37 +1,18 @@
 export default interface ClinicalTrialDetails {
 	NCTId: string;
-	OrgFullName: string;
 	BriefTitle: string;
 	OfficialTitle: string;
-	StatusVerifiedDate: string;
-	OverallStatus: string;
+	MinimumAge: string;
+	MaximumAge: string;
 	StartDate: string;
-	PrimaryCompletionDate: string;
-	ResponsiblePartyType: string;
-	LeadSponsorName: string;
-	LeadSponsorClass: string;
-	CollaboratorName: string;
+	CompletionDate: string;
 	BriefSummary: string;
-	DetailedDescription: string;
-	ArmGroupLabel: string;
-	ArmGroupDescription: string;
-	ArmGroupInterventionName: string;
-	InterventionType: string;
-	InterventionName: string;
-	InterventionDescription: string;
-	InterventionArmGroupLabel: string;
-	InterventionOtherName: string;
-	PrimaryOutcomeMeasure: string;
-	PrimaryOutcomeDescription: string;
-	PrimaryOutcomeTimeFrame: string;
-	SecondaryOutcomeMeasure: string;
-	SecondaryOutcomeDescription: string;
-	SecondaryOutcomeTimeFrame: string;
 	EligibilityCriteria: string;
-	HealthyVolunteers: string;
-	Gender: string;
-	MaximumAge: string | null;
-	StdAge: string;
+	LeadSponsorName: string;
+	Phase: string;
+	StudyType: string;
+	EnrollmentCount: number;
+	LastUpdateSubmitDate: string;
 	OverallOfficialName: string;
 	OverallOfficialAffiliation: string;
 	OverallOfficialRole: string;
@@ -41,11 +22,10 @@ export default interface ClinicalTrialDetails {
 	LocationState: string;
 	LocationZip: string;
 	LocationCountry: string;
-	LocationContactName: string;
-	LocationContactRole: string;
-	LocationContactEMail: string;
-	LocationContactPhone: string;
-	LocationContactPhoneExt: string;
-	MinimumAge: string | null; // Value can be null, so it's set as 'any' to handle both cases
-	DesignPrimaryPurpose?: any; // Value can be null, so it's set as 'any' to handle both cases
+	OfficialFacility: string; // Assuming it's string but you may need to parse it since it's formatted like an array in the example
+	OfficialPI: string;
+	OfficialContactRole: string;
+	OfficialContactPhone: string;
+	OfficialContactEmail: string;
+	Conditions: string;
 }
