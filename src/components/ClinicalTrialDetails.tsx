@@ -50,7 +50,6 @@ const ClinicalTrialDetails = () => {
 		} else if (type === 'Exclusion') {
 			criteria = splitData[1];
 		} else {
-			// Invalid type
 			return [];
 		}
 
@@ -60,6 +59,10 @@ const ClinicalTrialDetails = () => {
 
 		if (type === 'Inclusion') {
 			criteriaList.shift(); // Removing the "Inclusion Criteria:" header
+		}
+
+		if (type === 'Exclusion') {
+			criteriaList.shift(); // Removing the "Exclusion Criteria:" header
 		}
 
 		return criteriaList;
@@ -217,7 +220,49 @@ const ClinicalTrialDetails = () => {
 				>
 					Eligibility
 				</Heading>
-				<Text pl={'30px'}>{data?.EligibilityCriteria}</Text>
+				{inclusionCriteria.length === 0 &&
+					exclusionCriteria.length === 0 && (
+						<Text pl={'30px'}>{data?.EligibilityCriteria}</Text>
+					)}
+
+				{inclusionCriteria.length > 0 && (
+					<>
+						<Text fontSize={'lg'}>
+							<span
+								role="img"
+								aria-label="checkmark"
+							>
+								✔️
+							</span>{' '}
+							YOU CAN JOIN IF...
+						</Text>{' '}
+						<UnorderedList pl={'30px'}>
+							{inclusionCriteria.map((item, index) => (
+								<ListItem key={index}>{item}</ListItem>
+							))}
+						</UnorderedList>
+					</>
+				)}
+
+				{exclusionCriteria.length > 0 && (
+					<>
+						<Text fontSize={'lg'}>
+							<span
+								role="img"
+								aria-label="crossmark"
+							>
+								❌
+							</span>{' '}
+							YOU CAN'T JOIN IF...
+						</Text>
+						<UnorderedList pl={'30px'}>
+							{exclusionCriteria.map((item, index) => (
+								<ListItem key={index}>{item}</ListItem>
+							))}
+						</UnorderedList>
+					</>
+				)}
+
 				<Divider m={0} />
 				<Heading
 					as={'h5'}
