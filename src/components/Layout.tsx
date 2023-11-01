@@ -27,8 +27,8 @@ const Layout = () => {
 				<div className="container">
 					<div className="col-sm">
 						<img
-							src="src/assets/logo.png"
-							alt="Displaying PNG"
+							src="logo.png"
+							alt="Arizona Clinical Trails Logo"
 							className="col-6"
 							onClick={() => {
 								navigate('/');
