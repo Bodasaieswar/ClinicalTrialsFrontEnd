@@ -1,15 +1,22 @@
 import { Box, Divider, Flex, Icon, Link, Spacer, Text } from '@chakra-ui/react';
 
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { AiOutlineMail } from 'react-icons/ai';
 const Layout = () => {
+	const navigate = useNavigate();
 	return (
 		<>
 			<div className="bg-red p-3 mb-5">
 				<div className="container">
 					<div className="row">
 						<div className="col-12">
-							<span className="text-uppercase heading-style m-0 text-white">
+							<span
+								className="text-uppercase heading-style m-0 text-white"
+								onClick={() => {
+									navigate('/');
+								}}
+								style={{ cursor: 'pointer' }} // Add this style
+							>
 								THE UNIVERSITY OF ARIZONA HEALTH SCIENCES
 							</span>
 						</div>
@@ -23,6 +30,10 @@ const Layout = () => {
 							src="src/assets/logo.png"
 							alt="Displaying PNG"
 							className="col-6"
+							onClick={() => {
+								navigate('/');
+							}}
+							style={{ cursor: 'pointer' }}
 						/>
 					</div>
 					<hr />

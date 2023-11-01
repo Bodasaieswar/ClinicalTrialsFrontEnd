@@ -13,6 +13,7 @@ import {
 	Link,
 	ListItem,
 	UnorderedList,
+	Button,
 } from '@chakra-ui/react';
 import FormateAgeSentence from './FormateAgeSentence';
 import { BsFillPeopleFill, BsCalendar2CheckFill } from 'react-icons/bs';
@@ -447,6 +448,18 @@ const ClinicalTrialDetails = () => {
 						</Box>
 					</Box>
 				</Container>
+				<Box ml={1}>
+					<Button
+						colorScheme="gray"
+						mb={3}
+						// w={'10px'}
+						onClick={() => {
+							navigate('/');
+						}}
+					>
+						Back
+					</Button>
+				</Box>
 			</VStack>
 		</>
 	);
