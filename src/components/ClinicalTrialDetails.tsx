@@ -72,7 +72,10 @@ const ClinicalTrialDetails = () => {
 	const exclusionCriteria = extractCriteria('Exclusion');
 
 	const formatDate = (dateString: string) => {
-		const options = { month: 'long', year: 'numeric' };
+		const options: Intl.DateTimeFormatOptions = {
+			month: 'long',
+			year: 'numeric',
+		};
 		return new Date(dateString).toLocaleDateString(undefined, options);
 	};
 

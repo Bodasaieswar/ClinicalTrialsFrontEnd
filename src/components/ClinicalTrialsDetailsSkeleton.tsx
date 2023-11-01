@@ -4,11 +4,7 @@ import {
 	Heading,
 	Divider,
 	Box,
-	HStack,
-	Icon,
-	Badge,
 	Container,
-	Link,
 	ListItem,
 	UnorderedList,
 	Skeleton,
@@ -16,10 +12,6 @@ import {
 	List,
 } from '@chakra-ui/react';
 
-import { BsFillPeopleFill, BsCalendar2CheckFill } from 'react-icons/bs';
-import { FaLocationDot, FaUserDoctor } from 'react-icons/fa6';
-import { GrStatusGood } from 'react-icons/gr';
-import { AiOutlineLink } from 'react-icons/ai';
 import React from 'react';
 
 const ClinicalTrialsDetailsSkeleton = () => {
