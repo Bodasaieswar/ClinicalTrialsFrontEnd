@@ -8,11 +8,11 @@ const FormateAgeSentence = (
 		MaximumAge &&
 		MaximumAge.toLowerCase() !== 'not available'
 	) {
-		return `For people ages ${MinimumAge.toLowerCase()} to ${MaximumAge.toLowerCase()}`;
+		return `For people ages ${MinimumAge.toLowerCase()} years to ${MaximumAge.toLowerCase()} years`;
 	} else if (MinimumAge && MinimumAge.toLowerCase() !== 'not available') {
-		return `For people ages ${MinimumAge.toLowerCase()} and up`;
+		return `For people ages ${MinimumAge.toLowerCase()} years and up`;
 	} else if (MaximumAge && MaximumAge.toLowerCase() !== 'not available') {
-		return `For people up to ${MaximumAge.toLowerCase()}`;
+		return `For people up to ${MaximumAge.toLowerCase()} years`;
 	} else if (
 		MinimumAge &&
 		MinimumAge.toLowerCase() === 'not available' &&

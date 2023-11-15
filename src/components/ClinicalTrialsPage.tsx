@@ -10,6 +10,8 @@ import {
 	HStack,
 	Spacer,
 	Badge,
+	Divider,
+	border,
 } from '@chakra-ui/react';
 import { BsFillPeopleFill } from 'react-icons/bs';
 import useClinicalTrials from '../hooks/useClinicalTrials';
@@ -74,16 +76,33 @@ const ClinicalTrialsPage = () => {
 	return (
 		<>
 			<Stack spacing={4}>
-				<InputGroup size="lg">
-					<InputLeftAddon children="Search Trials" />
-					<Input
-						type="string"
-						placeholder="e.g. Heart, Lymphoma, Kidney"
+				<HStack
+					width="full"
+					spacing={4}
+				>
+					<Text
+						fontWeight={600}
+						fontSize={'3xl'}
+						whiteSpace="nowrap"
+						pt={3}
+					>
+						Search Trials
+					</Text>
+					<InputGroup
 						size="lg"
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-					/>
-				</InputGroup>
+						flex={1}
+					>
+						<Input
+							type="string"
+							placeholder="e.g. Heart, Lymphoma, Kidney"
+							borderColor={'blue.500'}
+							borderWidth={2}
+							value={searchTerm}
+							onChange={(e) => setSearchTerm(e.target.value)}
+						/>
+					</InputGroup>
+				</HStack>
+
 				<Text
 					size="sm"
 					color="blue.800"
@@ -96,7 +115,6 @@ const ClinicalTrialsPage = () => {
 				{displayedTrials.map((trial) => {
 					const {
 						protocolId,
-						nctNo,
 						OfficialTitle,
 						MinimumAge,
 						MaximumAge,
@@ -120,7 +138,10 @@ const ClinicalTrialsPage = () => {
 							</Link>
 							<Box>
 								<HStack>
-									<Icon as={BsFillPeopleFill} />
+									<Icon
+										as={BsFillPeopleFill}
+										color={'blue.500'}
+									/>
 									<Text
 										fontSize={'xs'}
 										mb={'3px'}

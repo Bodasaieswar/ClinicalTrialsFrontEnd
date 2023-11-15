@@ -3,7 +3,12 @@ import { Text } from '@chakra-ui/react';
 const ClinicalTrialDefination = () => {
 	return (
 		<>
-			<Text fontSize="lg">What is a Clinical Trial?</Text>
+			<Text
+				fontSize="lg"
+				fontWeight={500}
+			>
+				What is a Clinical Trial?
+			</Text>
 			<Text fontSize="md">
 				The US Department of Health and Human Services defines a
 				clinical trial as a research study conducted to evaluate a

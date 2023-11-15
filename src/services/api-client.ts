@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import ClinicalTrails from '../entities/ClinicalTrials';
+import ClinicalTrials from '../entities/ClinicalTrials';
 import ClinicalTrialDetails from '../entities/ClinicalTrailDetails';
 
 const axiosInstance = axios.create({
@@ -14,7 +14,7 @@ class APIClient {
 	}
 
 	getAll = async (config: AxiosRequestConfig) => {
-		const res = await axiosInstance.get<ClinicalTrails[]>(
+		const res = await axiosInstance.get<ClinicalTrials[]>(
 			this.endpoint,
 			config,
 		);

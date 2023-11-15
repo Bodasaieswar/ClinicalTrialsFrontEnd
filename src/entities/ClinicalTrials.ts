@@ -8,7 +8,7 @@ interface Trial {
 	protocolStatus: string | null;
 }
 
-export default interface ClinicalTrails {
+export default interface ClinicalTrials {
 	protocolId: string;
 	nctNo: string;
 	OfficialTitle: string | null | undefined;
