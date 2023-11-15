@@ -3,7 +3,7 @@ import ClinicalTrails from '../entities/ClinicalTrials';
 import ClinicalTrialDetails from '../entities/ClinicalTrailDetails';
 
 const axiosInstance = axios.create({
-	baseURL: 'https://bodasaieswar.info/api',
+	baseURL: 'http://localhost:3000/api',
 });
 
 class APIClient {

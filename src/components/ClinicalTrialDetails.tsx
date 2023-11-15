@@ -29,43 +29,79 @@ const ClinicalTrialDetails = () => {
 
 	if (error) return <p>Error: {error.message}</p>;
 	if (isLoading) return <ClinicalTrialsDetailsSkeleton />;
-
 	const extractCriteria = (type: string) => {
 		// Check if data and EligibilityCriteria are defined
 		if (!data || !data.EligibilityCriteria) {
+			console.error(
+				'Data or EligibilityCriteria is missing or undefined.',
+			);
 			return [];
 		}
 
-		const splitData = data.EligibilityCriteria.split('Exclusion');
-
-		// Check if we successfully split the data into at least two parts
-		if (splitData.length < 2) {
-			return [];
-		}
-
-		let criteria;
+		const criteria = data.EligibilityCriteria;
 
 		if (type === 'Inclusion') {
-			criteria = splitData[0];
+			// Extract only inclusion criteria
+			const inclusionPart = criteria.match(
+				/Inclusion Criteria:([\s\S]*?)(?:Exclusion Criteria:|$)/i,
+			);
+			if (inclusionPart && inclusionPart[1]) {
+				const inclusionCriteriaText = inclusionPart[1].trim();
+				const inclusionCriteriaList = inclusionCriteriaText
+					.split('\n\n')
+					.filter((item) => item.trim() !== '');
+				return inclusionCriteriaList;
+			} else {
+				console.error('Failed to extract inclusion criteria.');
+			}
 		} else if (type === 'Exclusion') {
-			criteria = splitData[1];
+			// Extract only exclusion criteria
+			const exclusionPart = criteria.match(
+				/Exclusion Criteria:([\s\S]*)/i,
+			);
+			if (exclusionPart && exclusionPart[1]) {
+				const exclusionCriteriaText = exclusionPart[1].trim();
+				const exclusionCriteriaList = exclusionCriteriaText
+					.split('\n\n')
+					.filter((item) => item.trim() !== '');
+				return exclusionCriteriaList;
+			} else {
+				console.error('Failed to extract exclusion criteria.');
+			}
+		} else if (type === 'Both') {
+			// Extract both inclusion and exclusion criteria
+			const inclusionPart = criteria.match(
+				/Inclusion Criteria:([\s\S]*?)(?:Exclusion Criteria:|$)/i,
+			);
+			const exclusionPart = criteria.match(
+				/Exclusion Criteria:([\s\S]*)/i,
+			);
+
+			const inclusionCriteriaList =
+				inclusionPart && inclusionPart[1]
+					? inclusionPart[1]
+							.trim()
+							.split('\n\n')
+							.filter((item) => item.trim() !== '')
+					: [];
+
+			const exclusionCriteriaList =
+				exclusionPart && exclusionPart[1]
+					? exclusionPart[1]
+							.trim()
+							.split('\n\n')
+							.filter((item) => item.trim() !== '')
+					: [];
+
+			return {
+				inclusion: inclusionCriteriaList,
+				exclusion: exclusionCriteriaList,
+			};
 		} else {
-			return [];
+			console.error('Invalid criteria type:', type);
 		}
 
-		const criteriaList = criteria
-			.split('\n\n')
-			.filter((item) => item.trim() !== '');
-
-		if (type === 'Inclusion') {
-			criteriaList.shift(); // Removing the "Inclusion Criteria:" header
-		}
-
-		if (type === 'Exclusion') {
-			criteriaList.shift(); // Removing the "Exclusion Criteria:" header
-		}
-
-		return criteriaList;
+		return [];
 	};
 
 	const inclusionCriteria = extractCriteria('Inclusion');
@@ -79,12 +115,24 @@ const ClinicalTrialDetails = () => {
 		return new Date(dateString).toLocaleDateString(undefined, options);
 	};
 
-	const facilities = data?.LocationFacility.split(',');
-	const statuses = data?.LocationStatus.split(',');
-	const cities = data?.LocationCity.split(',');
-	const states = data?.LocationState.split(',');
-	const countries = data?.LocationCountry.split(',');
-	const zip = data?.LocationZip.split(',');
+	if (
+		data?.LocationFacility !== null &&
+		data?.LocationStatus !== null &&
+		data?.LocationCity !== null &&
+		data?.LocationState !== null &&
+		data?.LocationCountry !== null &&
+		data?.LocationZip !== null
+	) {
+		const facilities = data.LocationFacility.split(',');
+		const statuses = data.LocationStatus.split(',');
+		const cities = data.LocationCity.split(',');
+		const states = data.LocationState.split(',');
+		const countries = data.LocationCountry.split(',');
+		const zip = data.LocationZip.split(',');
+	} else {
+		// Handle the case where at least one of the properties is null
+		// You may want to set defaults, display an error, or take other actions.
+	}
 
 	return (
 		<>
@@ -223,48 +271,52 @@ const ClinicalTrialDetails = () => {
 				>
 					Eligibility
 				</Heading>
-				{inclusionCriteria.length === 0 &&
-					exclusionCriteria.length === 0 && (
-						<Text pl={'30px'}>{data?.EligibilityCriteria}</Text>
+				{Array.isArray(inclusionCriteria) &&
+					inclusionCriteria.length > 0 && (
+						<>
+							<Text fontSize={'lg'}>
+								<span
+									role="img"
+									aria-label="checkmark"
+								>
+									✔️
+								</span>{' '}
+								YOU CAN JOIN IF...
+							</Text>{' '}
+							<UnorderedList pl={'30px'}>
+								{inclusionCriteria.map((item, index) => (
+									<ListItem key={index}>{item}</ListItem>
+								))}
+							</UnorderedList>
+						</>
 					)}
 
-				{inclusionCriteria.length > 0 && (
-					<>
-						<Text fontSize={'lg'}>
-							<span
-								role="img"
-								aria-label="checkmark"
-							>
-								✔️
-							</span>{' '}
-							YOU CAN JOIN IF...
-						</Text>{' '}
-						<UnorderedList pl={'30px'}>
-							{inclusionCriteria.map((item, index) => (
-								<ListItem key={index}>{item}</ListItem>
-							))}
-						</UnorderedList>
-					</>
-				)}
+				{Array.isArray(exclusionCriteria) &&
+					exclusionCriteria.length > 0 && (
+						<>
+							<Text fontSize={'lg'}>
+								<span
+									role="img"
+									aria-label="crossmark"
+								>
+									❌
+								</span>{' '}
+								YOU CAN'T JOIN IF...
+							</Text>
+							<UnorderedList pl={'30px'}>
+								{exclusionCriteria.map((item, index) => (
+									<ListItem key={index}>{item}</ListItem>
+								))}
+							</UnorderedList>
+						</>
+					)}
 
-				{exclusionCriteria.length > 0 && (
-					<>
-						<Text fontSize={'lg'}>
-							<span
-								role="img"
-								aria-label="crossmark"
-							>
-								❌
-							</span>{' '}
-							YOU CAN'T JOIN IF...
-						</Text>
-						<UnorderedList pl={'30px'}>
-							{exclusionCriteria.map((item, index) => (
-								<ListItem key={index}>{item}</ListItem>
-							))}
-						</UnorderedList>
-					</>
-				)}
+				{(!Array.isArray(inclusionCriteria) ||
+					inclusionCriteria.length === 0) &&
+					(!Array.isArray(exclusionCriteria) ||
+						exclusionCriteria.length === 0) && (
+						<Text pl={'30px'}>{data?.EligibilityCriteria}</Text>
+					)}
 
 				<Divider m={0} />
 				<Heading

@@ -9,6 +9,7 @@ import {
 	Icon,
 	HStack,
 	Spacer,
+	Badge,
 } from '@chakra-ui/react';
 import { BsFillPeopleFill } from 'react-icons/bs';
 import useClinicalTrials from '../hooks/useClinicalTrials';
@@ -40,10 +41,10 @@ const ClinicalTrialsPage = () => {
 		setCurrentPage(1); // Reset to the first page whenever searchTerm changes
 	}, [searchTerm]);
 
-	const toggleShowMore = (NCTId: string) => {
+	const toggleShowMore = (protocolId: string) => {
 		setShowMore((prevState) => ({
 			...prevState,
-			[NCTId]: !prevState[NCTId],
+			[protocolId]: !prevState[protocolId],
 		}));
 	};
 
@@ -94,19 +95,21 @@ const ClinicalTrialsPage = () => {
 			<Stack spacing={4}>
 				{displayedTrials.map((trial) => {
 					const {
-						NCTId,
+						protocolId,
+						nctNo,
 						OfficialTitle,
 						MinimumAge,
 						MaximumAge,
 						BriefSummary,
+						protocolStatus,
 					} = trial;
 					return (
 						<Box
-							key={NCTId}
+							key={protocolId}
 							p={4}
 							borderWidth="1px"
 						>
-							<Link to={`/trial/${NCTId}`}>
+							<Link to={`/trial/${protocolId}`}>
 								<Text
 									fontSize="lg"
 									mb={'2px'}
@@ -128,18 +131,34 @@ const ClinicalTrialsPage = () => {
 											MaximumAge,
 										)}
 									</Text>
+									{protocolStatus &&
+									protocolStatus === 'OPEN TO ACCRUAL' ? (
+										<Badge
+											variant="subtle"
+											colorScheme="green"
+										>
+											Recruiting
+										</Badge>
+									) : (
+										<Badge
+											variant="subtle"
+											colorScheme="red"
+										>
+											Not Recruiting
+										</Badge>
+									)}
 								</HStack>
 							</Box>
 							<Text fontSize="sm">
-								{showMore[NCTId]
+								{showMore[protocolId]
 									? BriefSummary
 									: `${BriefSummary?.substring(0, 250)}`}
 								<Button
 									colorScheme="red"
 									variant="link"
-									onClick={() => toggleShowMore(NCTId)}
+									onClick={() => toggleShowMore(protocolId)}
 								>
-									{showMore[NCTId]
+									{showMore[protocolId]
 										? '..show less'
 										: '..show more'}
 								</Button>
