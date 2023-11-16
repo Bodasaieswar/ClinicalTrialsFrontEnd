@@ -146,6 +146,7 @@ const ClinicalTrialDetails = () => {
 						/>
 						<Text as="b">
 							{FormateAgeSentence(
+								data?.age,
 								data?.MinimumAge,
 								data?.MaximumAge,
 							)}
@@ -241,21 +242,23 @@ const ClinicalTrialDetails = () => {
 						{data?.OfficialTitle}
 					</Text>
 				</Box>
-				<Box>
-					<Text
-						pl={'30px'}
-						fontSize={'lg'}
-						as={'b'}
-					>
-						Keywords
-					</Text>
-					<Text
-						pl={'50px'}
-						mb={1}
-					>
-						{data?.Conditions}
-					</Text>
-				</Box>
+				{data?.KeywordList && (
+					<Box>
+						<Text
+							pl={'30px'}
+							fontSize={'lg'}
+							as={'b'}
+						>
+							Keywords
+						</Text>
+						<Text
+							pl={'50px'}
+							mb={1}
+						>
+							{data?.KeywordList}
+						</Text>
+					</Box>
+				)}
 				<Divider m={0} />
 				<Heading
 					as={'h5'}

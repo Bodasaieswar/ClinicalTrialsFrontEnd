@@ -1,10 +1,12 @@
 interface Trial {
 	protocolId: string;
 	nctNo: string;
+	title: string | null;
 	OfficialTitle: string | null;
-	BriefSummary: string | null; // Assuming BriefSummary can also be null
-	MinimumAge: string | null;
-	MaximumAge: string | null;
+	BriefSummary: string | null;
+	age: string | null;
+	MinimumAge: number | null;
+	MaximumAge: number | null;
 	protocolStatus: string | null;
 }
 

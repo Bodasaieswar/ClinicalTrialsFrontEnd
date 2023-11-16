@@ -1,7 +1,6 @@
 import {
 	Input,
 	InputGroup,
-	InputLeftAddon,
 	Text,
 	Stack,
 	Button,
@@ -10,8 +9,6 @@ import {
 	HStack,
 	Spacer,
 	Badge,
-	Divider,
-	border,
 } from '@chakra-ui/react';
 import { BsFillPeopleFill } from 'react-icons/bs';
 import useClinicalTrials from '../hooks/useClinicalTrials';
@@ -34,11 +31,16 @@ const ClinicalTrialsPage = () => {
 	const [searchTerm, setSearchTerm] = useState('');
 
 	const filteredTrials =
-		data?.filter((trial) =>
-			trial.OfficialTitle?.toLowerCase().includes(
-				searchTerm.toLowerCase(),
-			),
-		) || [];
+		data?.filter((trial) => {
+			const searchTermLower = searchTerm.toLowerCase();
+			const officialTitleLower = trial.OfficialTitle?.toLowerCase();
+			const titleLower = trial.title?.toLowerCase();
+
+			return (
+				officialTitleLower?.includes(searchTermLower) ||
+				titleLower?.includes(searchTermLower)
+			);
+		}) || [];
 
 	useEffect(() => {
 		setCurrentPage(1); // Reset to the first page whenever searchTerm changes
@@ -117,7 +119,9 @@ const ClinicalTrialsPage = () => {
 					const {
 						protocolId,
 						nctNo,
+						title,
 						OfficialTitle,
+						age,
 						MinimumAge,
 						MaximumAge,
 						BriefSummary,
@@ -134,8 +138,11 @@ const ClinicalTrialsPage = () => {
 									fontSize="lg"
 									mb={'2px'}
 								>
-									{OfficialTitle &&
-										highlightSearchTerm(OfficialTitle)}
+									{OfficialTitle
+										? highlightSearchTerm(OfficialTitle)
+										: title
+										? highlightSearchTerm(title)
+										: null}
 								</Text>
 							</Link>
 							<Box>
@@ -150,6 +157,7 @@ const ClinicalTrialsPage = () => {
 										backgroundColor={'whiteAlpha.300'}
 									>
 										{FormateAgeSentence(
+											age,
 											MinimumAge,
 											MaximumAge,
 										)}
@@ -172,20 +180,24 @@ const ClinicalTrialsPage = () => {
 									)}
 								</HStack>
 							</Box>
-							<Text fontSize="sm">
-								{showMore[protocolId]
-									? BriefSummary
-									: `${BriefSummary?.substring(0, 250)}`}
-								<Button
-									colorScheme="red"
-									variant="link"
-									onClick={() => toggleShowMore(protocolId)}
-								>
+							{BriefSummary && (
+								<Text fontSize="sm">
 									{showMore[protocolId]
-										? '..show less'
-										: '..show more'}
-								</Button>
-							</Text>
+										? BriefSummary
+										: `${BriefSummary?.substring(0, 250)}`}
+									<Button
+										colorScheme="red"
+										variant="link"
+										onClick={() =>
+											toggleShowMore(protocolId)
+										}
+									>
+										{showMore[protocolId]
+											? '..show less'
+											: '..show more'}
+									</Button>
+								</Text>
+							)}
 						</Box>
 					);
 				})}

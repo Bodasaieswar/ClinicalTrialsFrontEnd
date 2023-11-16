@@ -28,7 +28,7 @@ const Error404 = () => {
 				<div className="container">
 					<div className="col-sm">
 						<img
-							src="logo.png"
+							src="/logo.png"
 							alt="Arizona Clinical Trails Logo"
 							className="col-6"
 							onClick={() => {

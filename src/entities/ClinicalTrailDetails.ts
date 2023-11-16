@@ -9,6 +9,15 @@ export default interface ClinicalTrialDetails {
 	nctNo?: string;
 	title?: string;
 	shortTitle?: string;
+	objectives?: string;
+	scope?: String;
+	age?: string;
+	registrationCenter?: string;
+	protocolTargetAccrual?: number;
+	rcLowerAccrualGoal?: number;
+	rcUpperAccrualGoal?: number;
+	primaryCompletionDate?: Date;
+	primaryCompletionDateType?: string;
 	institution?: string;
 	poc?: string;
 	poc_role?: string;
@@ -16,8 +25,8 @@ export default interface ClinicalTrialDetails {
 	poc_homeOrganization?: string;
 	BriefTitle?: string;
 	OfficialTitle?: string;
-	MinimumAge?: string;
-	MaximumAge?: string;
+	MinimumAge?: number;
+	MaximumAge?: number;
 	StartDate?: Date;
 	CompletionDate?: Date;
 	BriefSummary?: string;
@@ -26,6 +35,7 @@ export default interface ClinicalTrialDetails {
 	Phase?: string;
 	StudyType?: string;
 	EnrollmentCount?: number;
+	KeywordList?: number;
 	LastUpdateSubmitDate?: Date;
 	dbcreateddata: Date;
 }
