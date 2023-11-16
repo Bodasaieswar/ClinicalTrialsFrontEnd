@@ -21,14 +21,21 @@ import { FaLocationDot, FaUserDoctor } from 'react-icons/fa6';
 import { GrStatusGood } from 'react-icons/gr';
 import { AiOutlineLink } from 'react-icons/ai';
 import ClinicalTrialsDetailsSkeleton from './ClinicalTrialsDetailsSkeleton';
+import useClinicalTrialLocation from '../hooks/useClinicalTrialLocation';
 
 const ClinicalTrialDetails = () => {
 	const navigate = useNavigate();
-	const { NCTId } = useParams();
-	const { data, isLoading, error } = useClinicalTrialDetails(NCTId);
+	const { protocolId, nctNo } = useParams();
+	const { data, isLoading, error } = useClinicalTrialDetails(protocolId);
+	const {
+		data: locationData,
+		isLoading: locationDataLocation,
+		error: locationDataError,
+	} = useClinicalTrialLocation(nctNo);
 
 	if (error) return <p>Error: {error.message}</p>;
 	if (isLoading) return <ClinicalTrialsDetailsSkeleton />;
+
 	const extractCriteria = (type: string) => {
 		// Check if data and EligibilityCriteria are defined
 		if (!data || !data.EligibilityCriteria) {
@@ -115,25 +122,6 @@ const ClinicalTrialDetails = () => {
 		return new Date(dateString).toLocaleDateString(undefined, options);
 	};
 
-	if (
-		data?.LocationFacility !== null &&
-		data?.LocationStatus !== null &&
-		data?.LocationCity !== null &&
-		data?.LocationState !== null &&
-		data?.LocationCountry !== null &&
-		data?.LocationZip !== null
-	) {
-		const facilities = data.LocationFacility.split(',');
-		const statuses = data.LocationStatus.split(',');
-		const cities = data.LocationCity.split(',');
-		const states = data.LocationState.split(',');
-		const countries = data.LocationCountry.split(',');
-		const zip = data.LocationZip.split(',');
-	} else {
-		// Handle the case where at least one of the properties is null
-		// You may want to set defaults, display an error, or take other actions.
-	}
-
 	return (
 		<>
 			<VStack
@@ -144,6 +132,7 @@ const ClinicalTrialDetails = () => {
 					as="h2"
 					size="xl"
 					mb={'1px'}
+					color={'blackAlpha.900'}
 				>
 					{data?.BriefTitle}
 				</Heading>
@@ -153,6 +142,7 @@ const ClinicalTrialDetails = () => {
 						<Icon
 							as={BsFillPeopleFill}
 							mr={4}
+							color={'blue.500'}
 						/>
 						<Text as="b">
 							{FormateAgeSentence(
@@ -167,8 +157,9 @@ const ClinicalTrialDetails = () => {
 						<Icon
 							as={FaLocationDot}
 							mr={4}
+							color={'blue.500'}
 						/>
-						<Text m={0}>at {data?.OfficialFacility}</Text>
+						<Text m={0}>at {data?.institution}</Text>
 					</HStack>
 				</Box>
 				<Box>
@@ -176,6 +167,7 @@ const ClinicalTrialDetails = () => {
 						<Icon
 							as={BsCalendar2CheckFill}
 							mr={4}
+							color={'blue.500'}
 						/>
 						<Text m={0}>
 							study started{' '}
@@ -193,8 +185,9 @@ const ClinicalTrialDetails = () => {
 						<Icon
 							as={FaUserDoctor}
 							mr={4}
+							color={'blue.500'}
 						/>
-						<Text m={0}>by {data?.OverallOfficialName}</Text>
+						<Text m={0}>by {data?.poc}</Text>
 					</HStack>
 				</Box>
 				<Box>
@@ -205,7 +198,7 @@ const ClinicalTrialDetails = () => {
 							mr={4}
 						/>
 						<Badge colorScheme="green">
-							<Text m={0}>{data?.OfficialStatus}</Text>
+							<Text m={0}>{data?.protocolStatus}</Text>
 						</Badge>
 					</HStack>
 				</Box>
@@ -328,33 +321,34 @@ const ClinicalTrialDetails = () => {
 				</Heading>
 
 				<UnorderedList
-					pl={'30px'}
+					pl="30px"
 					mb={0}
 				>
-					{facilities?.map((facility, index) => (
+					{locationData?.map((facility, index) => (
 						<ListItem
-							key={facility}
+							key={facility.id}
 							mb={0}
 						>
 							<Box m={0}>
 								<Text mb={0}>
-									{facility}{' '}
+									{facility.LocationFacility}
+									{'  '}
 									<Badge
 										color={
-											statuses &&
-											statuses[index] == 'Recruiting'
+											facility.LocationStatus ===
+											'Recruiting'
 												? 'green'
 												: 'default'
 										}
 									>
-										{statuses && statuses[index]}
+										{facility.LocationStatus ?? 'N/A'}
 									</Badge>
 								</Text>
 								<Text mb={2}>
-									{cities && cities[index]},{' '}
-									{(states && states[index]) || 'N/A'},{' '}
-									{zip && zip[index]},{' '}
-									{countries && countries[index]}
+									{facility.LocationCity ?? 'N/A'},{' '}
+									{facility.LocationState ?? 'N/A'},{' '}
+									{facility.LocationZip ?? 'N/A'},{' '}
+									{facility.LocationCountry ?? 'N/A'}
 								</Text>
 							</Box>
 						</ListItem>
@@ -366,10 +360,20 @@ const ClinicalTrialDetails = () => {
 					as={'h5'}
 					mt={0}
 					mb={1}
+					fontSize={30}
 				>
-					Lead Scientist at {data?.OfficialFacility}
+					Lead Scientist at {data?.poc_homeOrganization}
 				</Heading>
-				<Text>{data?.OfficialPI}</Text>
+				<Text>
+					{data?.poc}
+					{', '}
+					{data?.poc_role}
+					{', '}
+					{data?.poc_email}
+					{', '}
+					{data?.poc_homeOrganization}
+					{'.'}
+				</Text>
 				<Divider m={0} />
 				<Heading
 					as={'h6'}

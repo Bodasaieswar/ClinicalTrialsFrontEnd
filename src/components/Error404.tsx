@@ -1,9 +1,9 @@
-import { Box, Divider, Flex, Icon, Link, Spacer, Text } from '@chakra-ui/react';
+import { Box, Flex, Spacer, Text, Image, Heading } from '@chakra-ui/react';
 
-import { Outlet, useNavigate } from 'react-router-dom';
-import { AiOutlineMail } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
 import Footer from './Footer';
-const Layout = () => {
+
+const Error404 = () => {
 	const navigate = useNavigate();
 	return (
 		<>
@@ -41,7 +41,29 @@ const Layout = () => {
 					<div className="row">
 						<div className="col-12">
 							<div id="main">
-								<Outlet />
+								<>
+									<Flex>
+										<Box
+											p="4"
+											pt="10"
+										>
+											<Heading color={'black'}>
+												Page Not Found
+											</Heading>
+											<Text>
+												Sorry, the page you requested
+												could not be found.
+											</Text>
+										</Box>
+										<Spacer />
+										<Box p="4">
+											<Image
+												src="/wilbur_wilma.png"
+												alt="A Picture of wilbur and wilma"
+											/>
+										</Box>
+									</Flex>
+								</>
 							</div>
 						</div>
 					</div>
@@ -52,4 +74,4 @@ const Layout = () => {
 	);
 };
 
-export default Layout;
+export default Error404;

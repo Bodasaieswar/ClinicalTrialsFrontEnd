@@ -19,6 +19,7 @@ import FormateAgeSentence from './FormateAgeSentence';
 import { useEffect, useState } from 'react';
 import ClinicalTrialsPageSkeleton from './ClinicalTrialsPageSkeleton';
 import { Link } from 'react-router-dom';
+import SomethingWentWrong from './SomethingWentWrong';
 
 interface ShowMoreState {
 	[key: string]: boolean;
@@ -66,7 +67,7 @@ const ClinicalTrialsPage = () => {
 		);
 	};
 
-	if (error) return <p>Error: {error.message}</p>;
+	if (error) return <SomethingWentWrong />;
 	if (isLoading) return <ClinicalTrialsPageSkeleton />;
 
 	const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -115,6 +116,7 @@ const ClinicalTrialsPage = () => {
 				{displayedTrials.map((trial) => {
 					const {
 						protocolId,
+						nctNo,
 						OfficialTitle,
 						MinimumAge,
 						MaximumAge,
@@ -127,7 +129,7 @@ const ClinicalTrialsPage = () => {
 							p={4}
 							borderWidth="1px"
 						>
-							<Link to={`/trial/${protocolId}`}>
+							<Link to={`/trial/${protocolId}/${nctNo}`}>
 								<Text
 									fontSize="lg"
 									mb={'2px'}
