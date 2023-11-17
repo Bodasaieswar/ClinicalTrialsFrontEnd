@@ -1,7 +1,4 @@
-import { Box, Divider, Flex, Icon, Link, Spacer, Text } from '@chakra-ui/react';
-
 import { Outlet, useNavigate } from 'react-router-dom';
-import { AiOutlineMail } from 'react-icons/ai';
 import Footer from './Footer';
 const Layout = () => {
 	const navigate = useNavigate();

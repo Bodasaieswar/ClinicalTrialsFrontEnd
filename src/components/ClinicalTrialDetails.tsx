@@ -22,7 +22,7 @@ import { BsFillPeopleFill, BsCalendar2CheckFill } from 'react-icons/bs';
 import { FaLocationDot, FaUserDoctor, FaBan } from 'react-icons/fa6';
 import { RxDoubleArrowDown } from 'react-icons/rx';
 import { GrStatusGood } from 'react-icons/gr';
-import { AiOutlineLink, AiOutlineMail } from 'react-icons/ai';
+import { AiOutlineLink } from 'react-icons/ai';
 import { IoMdCheckboxOutline } from 'react-icons/io';
 import ClinicalTrialsDetailsSkeleton from './ClinicalTrialsDetailsSkeleton';
 import useClinicalTrialLocation from '../hooks/useClinicalTrialLocation';
