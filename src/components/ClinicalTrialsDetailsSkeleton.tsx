@@ -54,7 +54,7 @@ const ClinicalTrialsDetailsSkeleton = () => {
 					>
 						Summary
 					</Text>
-					<Text
+					<Box
 						pl={'50px'}
 						mb={1}
 					>
@@ -63,7 +63,7 @@ const ClinicalTrialsDetailsSkeleton = () => {
 							spacing="4"
 							skeletonHeight="2"
 						/>
-					</Text>
+					</Box>
 				</Box>
 				<Box>
 					<Text
@@ -73,7 +73,7 @@ const ClinicalTrialsDetailsSkeleton = () => {
 					>
 						Official Title
 					</Text>
-					<Text
+					<Box
 						pl={'50px'}
 						mb={1}
 					>
@@ -82,7 +82,7 @@ const ClinicalTrialsDetailsSkeleton = () => {
 							spacing="4"
 							skeletonHeight="2"
 						/>
-					</Text>
+					</Box>
 				</Box>
 				<Box>
 					<Text
@@ -92,7 +92,7 @@ const ClinicalTrialsDetailsSkeleton = () => {
 					>
 						Keywords
 					</Text>
-					<Text
+					<Box
 						pl={'50px'}
 						mb={1}
 					>
@@ -101,8 +101,9 @@ const ClinicalTrialsDetailsSkeleton = () => {
 							spacing="4"
 							skeletonHeight="2"
 						/>
-					</Text>
+					</Box>
 				</Box>
+
 				<Divider m={0} />
 				<Heading
 					as={'h5'}

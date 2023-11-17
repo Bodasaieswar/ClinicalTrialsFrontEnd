@@ -15,6 +15,10 @@ const router = createBrowserRouter([
 				path: 'trial/:protocolId/:nctNo',
 				element: <ClinicalTrialDetails />,
 			},
+			{
+				path: 'trial/:protocolId',
+				element: <ClinicalTrialDetails />,
+			},
 		],
 	},
 ]);
